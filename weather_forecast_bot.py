@@ -22,6 +22,31 @@ def help(update, context):
 
 def get_weather(update, context):
     API_Key = '99271d6bcbec1e205f414bcd204865ff'
+    info = get_lat_lon()
+    latitude = info[0]
+    longitude = info[1]
+    url = f'https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={API_Key}&units=metric'
+    response = requests.get(url)
+    update.message.reply_text(response.json())
 
-def get_city():
+def get_city(update, context):
     API_Key = '99271d6bcbec1e205f414bcd204865ff'
+    global city
+    city = update.message.text
+
+def get_lat_lon():
+    API_Key = '99271d6bcbec1e205f414bcd204865ff'
+    url = f"http://api.openweathermap.org/geo/1.0/direct?q={city}&appid={API_Key}"
+    response = requests.get(url)
+    lat = response.json()[0]['lat']
+    lon = response.json()[0]['lon']
+    return lat, lon
+
+
+dispatcher.add_handler(CommandHandler('start', start))
+dispatcher.add_handler(CommandHandler('help', help))
+dispatcher.add_handler(CommandHandler('get_weather', get_weather))
+dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, get_city))
+
+updater.start_polling()
+updater.idle()
