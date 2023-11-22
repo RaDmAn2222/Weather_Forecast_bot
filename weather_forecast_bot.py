@@ -27,7 +27,28 @@ def get_weather(update, context):
     longitude = info[1]
     url = f'https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={API_Key}&units=metric'
     response = requests.get(url)
-    update.message.reply_text(response.json())
+    response = response.json()
+    update.message.reply_text(f"""
+Longitude : {response['coord']['lon']} ↔️
+Latitude : {response['coord']['lat']} ↕️
+Main : {response['weather'][0]['main']} 🏷
+Description : {response['weather'][0]['description']} 📜
+Temperature : {response['main']['temp']} 🌡
+Feels Like : {response['main']['feels_like']} 🌡
+Temp_Min : {response['main']['temp_min']} 🌡
+Temp_Max : {response['main']['temp_max']} 🌡
+Pressure : {response['main']['pressure']} 🪨
+Humidity : {response['main']['humidity']} 🥵
+Visibility : {response['visibility']} 👁
+Wind Speed : {response['wind']['speed']} 💨
+Wind Degree : {response['wind']['deg']} 🌬
+Clouds : {response['clouds']['all']} ☁️
+Country : {response['sys']['country']} 🌎
+Sunrise : {response['sys']['sunrise']} 🌅
+Sunset : {response['sys']['sunset']} 🌇
+Timezone : {response['timezone']} 🕔
+Name : {response['name']} 🏙
+""")
 
 def get_city(update, context):
     API_Key = ''
